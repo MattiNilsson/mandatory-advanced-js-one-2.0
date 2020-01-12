@@ -21,6 +21,7 @@ class Chat extends React.Component {
     return(
       <div className="overall">
         <h1>Welcome</h1>
+        <button>logout</button>
         <div className="centerList"><ul className="messages">{myLi}</ul></div>
         <form onSubmit={this.props.onClickSend}>
           <input onChange={this.props.onChatInput} value={this.props.message}/>

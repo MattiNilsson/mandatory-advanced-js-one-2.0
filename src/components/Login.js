@@ -8,7 +8,7 @@ class Login extends React.Component {
           <h1>Login</h1>
           <form onSubmit={this.props.onClick}>
             <input onChange={this.props.onChange} value={this.props.username}/>
-            <button type="submit">Log in</button>
+            <button type="submit">Login</button>
           </form>
         </div>
     ) 

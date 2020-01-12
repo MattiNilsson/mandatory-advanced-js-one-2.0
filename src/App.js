@@ -39,8 +39,13 @@ class App extends React.Component {
   }
 
   onClick(e){
-    this.setState({login : false})
-    console.log(this.state.username);
+    e.preventDefault();
+    if(/\ /g.test(this.state.username)){
+      alert("faulty username")
+    }else{
+      this.setState({login : false})
+      console.log(this.state.username);
+    }
   }
 
   onChange(e){
