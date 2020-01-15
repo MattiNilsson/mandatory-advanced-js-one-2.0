@@ -5,7 +5,7 @@ class Login extends React.Component {
   render(){
     return(
         <div className="overall">
-          <h1>Login</h1>
+          <h1 className="login">Login</h1>
           <form onSubmit={this.props.onClick}>
             <input onChange={this.props.onChange} value={this.props.username}/>
             <button type="submit">Login</button>

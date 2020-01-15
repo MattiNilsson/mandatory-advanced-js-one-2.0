@@ -12,6 +12,7 @@ class App extends React.Component {
     this.state = {
       login : true,
       username : "Matti",
+      userInfo : "",
       response : [],
       message : "",
       newMessage : [],
@@ -21,16 +22,27 @@ class App extends React.Component {
 
     this.onClickSend = this.onClickSend.bind(this);
     this.onChatInput = this.onChatInput.bind(this);
+
+    this.onLogOut = this.onLogOut.bind(this);
+  }
+
+  onLogOut(e){
+    this.setState({username : "", login : true});
+    console.log("log out")
   }
 
   onClickSend(e){
     e.preventDefault();
-    socket.emit("message", {username: this.state.username, content: this.state.message})
-    this.state.response.push({
-      username: this.state.username, 
-      content: this.state.message, 
-      id: this.state.message,
-    })
+    if(/^[a-z A-Z 0-9 \s_-åäöÅÄÖ:;.,)(]{1,200}$/.test(this.state.message)){
+      socket.emit("message", {username: this.state.username, content: this.state.message})
+      this.state.response.push({
+        username: this.state.username, 
+        content: this.state.message, 
+        id: this.state.message,
+      })
+    }else{
+      alert("Cannot send empty message")
+    }
     this.setState({message : ""})
   }
 
@@ -40,11 +52,11 @@ class App extends React.Component {
 
   onClick(e){
     e.preventDefault();
-    if(/\ /g.test(this.state.username)){
-      alert("faulty username")
-    }else{
+    if(/^[a-z A-Z \s_-åäöÅÄÖ]{1,12}$/g.test(this.state.username)){
       this.setState({login : false})
       console.log(this.state.username);
+    }else{
+      alert("The username can only contain alphanumeric characters, “-”, “_” and spaces and must be between 1 and 12 characters long")
     }
   }
 
@@ -57,9 +69,14 @@ class App extends React.Component {
     socket.on("messages", data => this.setState({response : data}))
     console.log(this.state.username)
     socket.on("new_message", (data) => {
-      this.state.response.push(data)
-      this.forceUpdate();
+      this.setState({response: this.state.response.concat(data)});
+      
     })
+  }
+
+  componentWillUnmount() {
+    socket.off();
+    console.log("disconnect")
   }
 
   render(){
@@ -79,6 +96,7 @@ class App extends React.Component {
         onClickSend={this.onClickSend}
         onChatInput={this.onChatInput}
         message={this.state.message}
+        onLogOut={this.onLogOut}
         />
     }
     return (
